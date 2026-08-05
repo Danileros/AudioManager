@@ -139,8 +139,9 @@ namespace AudioMgr
             _audioSource.Stop();
             if(_routineToken != null)
             {
-                MelonCoroutines.Stop(_routineToken);
+                object token = _routineToken;
                 _routineToken = null;
+                MelonCoroutines.Stop(token);
             }
         }
 
