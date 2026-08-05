@@ -15,6 +15,7 @@ namespace AudioMgr
         }
 
         public AudioSource _audioSource;
+        public PlayState State => _playState;
         private Setting _activeSetting;
 
         private bool _isEnabled = false;
@@ -22,6 +23,7 @@ namespace AudioMgr
         private AudioMaster.SourceType _sourceType;
         public enum PlayState { Stopped, Playing, Paused };
         private PlayState _playState = PlayState.Stopped;
+        private object _routineToken;
 
         [HideFromIl2Cpp]
         public void Setup(AudioMaster.SourceType sourceType)
@@ -101,9 +103,9 @@ namespace AudioMgr
         [HideFromIl2Cpp]
         public void Play(Clip audioClip)
         {
-            Stop();
+            AssignClip(audioClip);
             _playState = PlayState.Playing;
-            MelonCoroutines.Start(PlayRoutine(audioClip));
+            _routineToken = MelonCoroutines.Start(PlayRoutine(audioClip));
         }
 
         [HideFromIl2Cpp]
@@ -135,6 +137,11 @@ namespace AudioMgr
         {
             _playState = PlayState.Stopped;
             _audioSource.Stop();
+            if(_routineToken != null)
+            {
+                MelonCoroutines.Stop(_routineToken);
+                _routineToken = null;
+            }
         }
 
         

@@ -34,9 +34,8 @@ namespace AudioMgr
             return ApplyMasterOffset(_globalVolumes[type]); 
         }
 
-        private static float ApplyMasterOffset(float volume)
+        public static float ApplyMasterOffset(float volume)
         {   
-
             return volume * _masterVolume;
         }
 
